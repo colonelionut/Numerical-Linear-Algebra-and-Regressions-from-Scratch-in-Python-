@@ -36,3 +36,27 @@ def solve_with_gaussian_elimination(A,b):
     # We have performed the Gaussian elimination, now we can solve the system using back substitution
     x = solve_using_back_substitution(A,b)
     return x
+
+
+def crout_method(A):
+
+    A = A.astype(float)
+
+    # We can initialise L as a zero matrix
+    n = len(A)
+
+    L = np.zeros((n,n))
+
+    # We can initialise U as the identity matrix, since the main diagonal will remain 1
+
+    U = np.eye(n)
+
+    for p in range(n):
+        for i in range(0,p):
+            U[i,p] = (A[i,p] - np.dot(L[i, 0:p], U[0:p, p]))/ L[i,i]
+        for i in range(p,n):
+            L[i,p] = A[i,p] - np.dot(L[i, 0:p], U[0:p, p])
+
+
+            
+    return L, U
