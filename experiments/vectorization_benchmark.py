@@ -1,5 +1,8 @@
-import numpy as np
+"""Python loops vs vectorized NumPy (BLAS) for matvec, dot and norm."""
+
 import time
+
+import numpy as np
 
 
 def matvec_loop(A, x):
@@ -12,8 +15,7 @@ def matvec_loop(A, x):
 
 
 def matvec_vec(A, x):
-	return np.dot(A,x)
-
+	return A @ x
 
 
 def dot_loop(u, v):
@@ -24,7 +26,7 @@ def dot_loop(u, v):
 
 
 def dot_vec(u, v):
-	return np.dot(u,v)
+	return np.dot(u, v)
 
 
 def norm_loop(u):
@@ -35,7 +37,7 @@ def norm_loop(u):
 
 
 def norm_vec(u):
-	return np.linalg.vector_norm(u);
+	return np.linalg.norm(u)
 
 
 def bench(fn, *args, reps=5):
@@ -58,13 +60,13 @@ def main():
 	yv, tv = bench(matvec_vec, A, x)
 	print("matvec  eq:", np.allclose(yl, yv), " speedup:", round(tl / tv, 1), "x")
 
-	dl, _ = bench(dot_loop, u, v)
-	dv, _ = bench(dot_vec, u, v)
-	print("dot     eq:", np.allclose(dl, dv))
+	dl, tl = bench(dot_loop, u, v)
+	dv, tv = bench(dot_vec, u, v)
+	print("dot     eq:", np.allclose(dl, dv), " speedup:", round(tl / tv, 1), "x")
 
-	nl, _ = bench(norm_loop, u)
-	nv, _ = bench(norm_vec, u)
-	print("norm    eq:", np.allclose(nl, nv))
+	nl, tl = bench(norm_loop, u)
+	nv, tv = bench(norm_vec, u)
+	print("norm    eq:", np.allclose(nl, nv), " speedup:", round(tl / tv, 1), "x")
 
 
 if __name__ == "__main__":
